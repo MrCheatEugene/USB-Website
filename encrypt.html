@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>USB Шифрование</title>
+	<script src="openpgp.min.js"></script>
+	<style type="text/css">
+		body{
+			font: 15px Segoe UI;
+		}
+	</style>
+	<script type="text/javascript">
+		            function download(filename, textInput) {
+
+                  var element = document.createElement('a');
+                  element.setAttribute('href','data:text/plain;base64,' +btoa(textInput.replace(/(\r\n|\n|\r)/gm, "\\n")));
+                  element.setAttribute('download', filename);
+                  document.body.appendChild(element);
+                  element.click();
+                  //document.body.removeChild(element);
+            }
+		async function encrypt() {
+			let text = document.getElementById('text').value;
+			let passwords = document.getElementById('passwords').value.split(',');
+			if (text == "") {
+				alert("Введите текст!");
+			}
+			if (passwords == "") {
+				alert("Введите хотя-бы один пароль!");
+			}else{
+			    const message = await openpgp.createMessage({ text: text});
+    			let encrypted = await openpgp.encrypt({
+        		message, // input as Message object
+        		passwords: passwords // multiple passwords possible
+    			});
+    			download("encrypted.txt",encrypted);
+		}
+	}
+	</script>
+</head>
+<body>
+<div>
+	<p>Текст для шифрования:</p>
+	<textarea id="text" style="width: 300px; height: 100px;"></textarea>
+	<p>ПаролИ, разделять запятой</p>
+	<textarea id="passwords" style="width: 300px; height: 20px;"></textarea>
+	<br><br>
+	<button onclick="encrypt();">Зашифровать</button>
+	<p>Содержимое файла вставьте в переменную "encrypted" файла-дешифратора.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ДЕШИФРОВКА СТРАНИЦЫ</title>
+	<script src="openpgp.min.js"></script>
+
+	<script type="text/javascript">
+		let serial="";
+		const vendorId= 0x2341;// VID или Vendor ID ключа/ключей
+		const eencrypted = "-----BEGIN PGP MESSAGE-----\n\nwy4ECQMICKobhZtimcjgz/j2bcanXPapmV5VUl+KoTxwSkm4lMzBoamNPe88\n8lh+0kQBjKZpmoKNfZrrxadnVsS14nWSpQ2Z47CBFDQ8ts7ALpv4iqnF2nF/\nH61X0pSA96W/h6fJlz0mxBvBRAn6xCWjM2eswQ==\n=kKyt\n-----END PGP MESSAGE-----\n";// Зашифрованное сообщение, пароль для стандартного сообщения - 12345.
+		function req() {
+	navigator.usb.requestDevice({ filters: [{ vendorId: vendorId }] })
+.then(device => {
+document.getElementById('state').innerText="Расшифровка..";  serial=(device.serialNumber);
+ decrypt();
+})
+.catch(error => { document.getElementById('state').innerText="Ошибка подключения!";});
+		}
+async function decrypt(){
+    try{
+
+    const encryptedMessage = await openpgp.readMessage({
+        armoredMessage: eencrypted // parse encrypted bytes
+    });
+    console.log(encryptedMessage);;
+    const { data: decrypted } = await openpgp.decrypt({
+        message: encryptedMessage,
+        passwords: [serial], // decrypt with password
+    });
+       	document.getElementsByTagName('body')[0].innerHTML = decrypted;
+
+}catch(err){
+	document.getElementById('state').innerText="Неверный ключ!";
+}
+
+}
+	</script>
+
+</head>
+<body>
+	<div id="connect">
+<h1 id="state">Жду подключения</h1>
+<button onclick="req();">Подключится</button>
+</div>
+</body>
+</html>
