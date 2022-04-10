@@ -3,9 +3,13 @@
 <head>
 	<title>ДЕШИФРОВКА СТРАНИЦЫ</title>
 	<script src="openpgp.min.js"></script>
-
+	<style>
+		body{
+		font: 15px Segoe UI;
+		}
+	</style>
 	<script type="text/javascript">
-		let serial="";
+		let serial="12345";// ключ УЖЕ стоит, нужно только вызвать функцию decrypt
 		const vendorId= 0x2341;// VID или Vendor ID ключа/ключей
 		const eencrypted = "-----BEGIN PGP MESSAGE-----\n\nwy4ECQMICKobhZtimcjgz/j2bcanXPapmV5VUl+KoTxwSkm4lMzBoamNPe88\n8lh+0kQBjKZpmoKNfZrrxadnVsS14nWSpQ2Z47CBFDQ8ts7ALpv4iqnF2nF/\nH61X0pSA96W/h6fJlz0mxBvBRAn6xCWjM2eswQ==\n=kKyt\n-----END PGP MESSAGE-----\n";// Зашифрованное сообщение, пароль для стандартного сообщения - 12345.
 		function req() {
@@ -41,6 +45,7 @@ async function decrypt(){
 	<div id="connect">
 <h1 id="state">Жду подключения</h1>
 <button onclick="req();">Подключится</button>
+<button onclick="decrypt();">Дешифровать</button>
 </div>
 </body>
 </html>
